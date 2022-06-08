@@ -3,7 +3,11 @@
       <div class="window" @click.stop="true">
           <div class="header">{{title}}</div>
           <div class="content">
-              <InputFieldComponent placeholder="Input Name" :text="modalText" @changed="changed"></InputFieldComponent>
+              <InputFieldComponent
+                      placeholder="Input Name"
+                      :text="modalText"
+                      @submitted="accept"
+                      @changed="changed"></InputFieldComponent>
           </div>
           <div class="footer">
               <div class="button" @click.stop="getClose">
@@ -18,35 +22,36 @@
 </template>
 
 <script>
-import { Options, Vue } from 'vue-class-component';
-import InputFieldComponent from "./InputFieldComponent";
+    import { Options, Vue } from 'vue-class-component';
+    import InputFieldComponent from "./InputFieldComponent";
 
-@Options({
-  components: {InputFieldComponent},
-  props: {
-      type: {type: String, default: ""},
-      title: {type: String, default: ""},
-      modalText: {type: String, default: ""},
-      isFolder: {type: Boolean, default: false},
-  },
-  emits: ['get-close','accept','changed'],
-  watch: {},
-})
-export default class ModalWindow extends Vue{
+    @Options({
+        components: {InputFieldComponent},
+        props: {
+            type: {type: String, default: ""},
+            title: {type: String, default: ""},
+            modalText: {type: String, default: ""},
+        },
+        emits: ['get-close','accept','changed'],
+        watch: {},
+    })
+    export default class ModalWindow extends Vue{
 
-    getClose(){
-        this.$emit('get-close')
+        getClose(){
+            this.$emit('get-close')
+        }
+
+        accept(){
+            if(this.$props.modalText.length > 0){
+                this.$emit('accept', this.$props.modalText, this.$props.type)
+            }
+        }
+
+        changed(text){
+            this.$emit('changed', text)
+        }
+
     }
-
-    accept(){
-        this.$emit('accept', this.$props.modalText, this.$props.type)
-    }
-
-    changed(text){
-        this.$emit('changed', text)
-    }
-
-}
 </script>
 
 <style scoped lang="scss">
@@ -90,7 +95,6 @@ export default class ModalWindow extends Vue{
                 justify-content: center;
                 align-items: center;
                 padding: 16px 0;
-                //background-color: deepskyblue;
             }
 
             .footer {
@@ -99,6 +103,7 @@ export default class ModalWindow extends Vue{
                 min-height: 64px;
                 justify-content: end;
                 align-items: center;
+
                 .button{
                     display: flex;
                     height: 32px;
@@ -110,12 +115,17 @@ export default class ModalWindow extends Vue{
                     box-sizing: border-box;
                     margin: 6px 6px;
                     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
                     &:hover{
                         background-color: rgba(0,255,0,.5);
                     }
+
                 }
+
             }
+
         }
+
     }
 
 </style>

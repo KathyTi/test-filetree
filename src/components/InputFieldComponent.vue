@@ -3,6 +3,7 @@
         <input class="input-field" id="input-field"
                :value="text"
                @input="change"
+               @keyup.enter="submitted"
                :placeholder="placeholder">
     </div>
 </template>
@@ -16,7 +17,7 @@
             text: {type: String, default: ''},
             placeholder: {type: String, default: ''},
         },
-        emits: ['changed'],
+        emits: ['changed','submitted'],
         watch: {},
     })
     export default class InputFieldComponent extends Vue{
@@ -26,12 +27,14 @@
             input.focus()
         }
 
-        currentText = ''
-
         change(e){
-            this.currentText = e.target.value
-            this.$emit('changed', this.currentText)
+            this.$emit('changed', e.target.value)
         }
+
+        submitted(){
+            this.$emit('submitted')
+        }
+
     }
 </script>
 
