@@ -1,5 +1,10 @@
 # file-tree-test
 
+## Project launch
+```
+./dist/index.html
+```
+
 ## Project setup
 ```
 npm install
